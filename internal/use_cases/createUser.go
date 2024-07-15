@@ -8,8 +8,10 @@ import (
 )
 
 type CreateUserDto struct {
-	Email    string
-	Password string
+	Email     string
+	Password  string
+	Name      string
+	Telephone string
 }
 
 type ICreateUserUseCase interface {
@@ -31,8 +33,10 @@ func (c *CreateUserUseCase) Execute(in CreateUserDto) (*models.User, error) {
 	}
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
 	user := models.User{
-		Email:    in.Email,
-		Password: string(passwordHash),
+		Email:     in.Email,
+		Password:  string(passwordHash),
+		Name:      in.Name,
+		Telephone: in.Telephone,
 	}
 	err = c.userRepo.Save(&user)
 	if err != nil {

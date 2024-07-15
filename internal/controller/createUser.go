@@ -2,14 +2,25 @@ package controller
 
 import (
 	"dtonetest/internal/use_cases"
+	"dtonetest/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 type CreateUserInputDto struct {
-	Email    string `json:"email" binding:"required,email"`
-	Password string `json:"password" binding:"required"`
+	Email     string `json:"email" binding:"required,email"`
+	Password  string `json:"password" binding:"required"`
+	Name      string `json:"name" binding:"required"`
+	Telephone string `json:"telephone" binding:"required,e164"`
 }
+
+type CreateUserOutputDto struct {
+	ID        string `json:"id"`
+	Email     string `json:"email"`
+	Name      string `json:"name"`
+	Telephone string `json:"telephone"`
+}
+
 type CreateUserController struct {
 	CreateUserUseCase use_cases.ICreateUserUseCase
 }
@@ -28,8 +39,10 @@ func (rController *CreateUserController) Register(c *gin.Context) {
 	}
 
 	dtoIn := use_cases.CreateUserDto{
-		Email:    input.Email,
-		Password: input.Password,
+		Email:     input.Email,
+		Password:  input.Password,
+		Name:      input.Name,
+		Telephone: input.Telephone,
 	}
 
 	user, err := rController.CreateUserUseCase.Execute(dtoIn)
@@ -39,5 +52,14 @@ func (rController *CreateUserController) Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"message": user})
+	c.JSON(http.StatusOK, gin.H{"user": rController.modelToOutputDto(user)})
+}
+
+func (rController *CreateUserController) modelToOutputDto(m *models.User) CreateUserOutputDto {
+	return CreateUserOutputDto{
+		ID:        m.ID,
+		Email:     m.Email,
+		Name:      m.Name,
+		Telephone: m.Telephone,
+	}
 }

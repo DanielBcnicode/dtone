@@ -64,12 +64,16 @@ func main() {
 	loginController := controller.NewLoginController(login)
 
 	r := gin.Default()
-	r.Use(otelgin.Middleware("DTOne"))
+	r.GET("/health", func(context *gin.Context) {
+		context.JSON(200, gin.H{"message": "running"})
+	})
 	public := r.Group("/api/v1")
+	public.Use(otelgin.Middleware("DTOne"))
 	public.POST("/register", userController.Register)
 	public.POST("/login", loginController.Login)
 
 	protected := r.Group("/api/v1")
+	protected.Use(otelgin.Middleware("DTOne"))
 	protected.Use(services.JwtAuthMiddleware(cnf.ApiSecret))
 	protected.GET("/test", func(context *gin.Context) {
 		context.JSON(200, gin.H{"message": "castaña"})
