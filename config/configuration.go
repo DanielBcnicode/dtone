@@ -6,10 +6,16 @@ import (
 	"strconv"
 )
 
+type OTLConfig struct {
+	ServiceName       string
+	CollectorUrl      string
+	InsecureCollector string
+}
 type Configuration struct {
 	Database      *DBConnection
 	ApiSecret     string
 	TokenLifeSpan int
+	OTL           OTLConfig
 }
 
 func GetConfiguration() (*Configuration, error) {
@@ -30,6 +36,11 @@ func GetConfiguration() (*Configuration, error) {
 		Database:      &db,
 		ApiSecret:     os.Getenv("API_SECRET"),
 		TokenLifeSpan: ls,
+		OTL: OTLConfig{
+			ServiceName:       os.Getenv("SERVICE_NAME"),
+			CollectorUrl:      os.Getenv("COLLECTOR_URL"),
+			InsecureCollector: os.Getenv("INSECURE_COLLECTOR"),
+		},
 	}
 
 	return cnf, nil

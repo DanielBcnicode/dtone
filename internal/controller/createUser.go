@@ -7,7 +7,7 @@ import (
 )
 
 type CreateUserInputDto struct {
-	Username string `json:"username" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
 type CreateUserController struct {
@@ -28,7 +28,7 @@ func (rController *CreateUserController) Register(c *gin.Context) {
 	}
 
 	dtoIn := use_cases.CreateUserDto{
-		Username: input.Username,
+		Email:    input.Email,
 		Password: input.Password,
 	}
 

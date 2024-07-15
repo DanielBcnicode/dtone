@@ -8,7 +8,7 @@ import (
 )
 
 type IWebTokenService interface {
-	GenerateToken(userID string) (string, error)
+	GenerateToken(email string, id string) (string, error)
 	ValidateToken(token string) error
 }
 type WebTokenService struct {
@@ -26,10 +26,11 @@ func NewWebTokenService(apiSecret string, lifeSpan int) (*WebTokenService, error
 	return &WebTokenService{apiSecret: apiSecret, lifeSpan: lifeSpan}, nil
 }
 
-func (wt *WebTokenService) GenerateToken(userID string) (string, error) {
+func (wt *WebTokenService) GenerateToken(email string, id string) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["user_id"] = userID
+	claims["user_id"] = id
+	claims["email"] = email
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(wt.lifeSpan)).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 

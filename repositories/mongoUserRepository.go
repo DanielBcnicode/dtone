@@ -18,9 +18,9 @@ func (mr *MongoUserRepository) Save(user *models.User) error {
 	return tx.Error
 }
 
-func (mr *MongoUserRepository) FindByUsername(username string) (models.User, error) {
+func (mr *MongoUserRepository) FindByEmail(email string) (models.User, error) {
 	user := models.User{}
-	tx := mr.Database.First(&user, "username = ?", username)
+	tx := mr.Database.First(&user, "email = ?", email)
 
 	return user, tx.Error
 }

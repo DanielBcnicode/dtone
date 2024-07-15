@@ -7,7 +7,7 @@ import (
 )
 
 type LoginInputDto struct {
-	Username string `json:"username" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -26,7 +26,7 @@ func (lc LoginController) Login(c *gin.Context) {
 		return
 	}
 	dtoIn := use_cases.LoginDto{
-		Username: input.Username,
+		Email:    input.Email,
 		Password: input.Password,
 	}
 

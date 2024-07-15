@@ -28,7 +28,7 @@ func main() {
 	}
 
 	// Tracing initialization
-	tracer := initTracer("DTOne", "collectorUrl", "true")
+	tracer := initTracer(cnf.OTL.ServiceName, cnf.OTL.CollectorUrl, cnf.OTL.InsecureCollector)
 	defer func() {
 		err := tracer(context.Background())
 		if err != nil {

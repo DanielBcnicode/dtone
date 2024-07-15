@@ -7,7 +7,7 @@ import (
 )
 
 type LoginDto struct {
-	Username string
+	Email    string
 	Password string
 }
 
@@ -29,7 +29,7 @@ func NewLoginUseCase(userRepo repositories.UserRepository, webTokenService servi
 }
 
 func (l LoginUseCase) Execute(in LoginDto) (*LoginResponse, error) {
-	user, err := l.userRepo.FindByUsername(in.Username)
+	user, err := l.userRepo.FindByEmail(in.Email)
 	if err != nil {
 		return nil, errors.New("the user does not exists")
 	}
@@ -37,7 +37,7 @@ func (l LoginUseCase) Execute(in LoginDto) (*LoginResponse, error) {
 	if err != nil || !valid {
 		return nil, errors.New("the password is incorrect")
 	}
-	wt, err := l.webTokenService.GenerateToken(in.Username)
+	wt, err := l.webTokenService.GenerateToken(in.Email, user.ID)
 	if err != nil {
 		return nil, err
 	}

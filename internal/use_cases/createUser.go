@@ -8,7 +8,7 @@ import (
 )
 
 type CreateUserDto struct {
-	Username string
+	Email    string
 	Password string
 }
 
@@ -25,13 +25,13 @@ func NewCreateUserUseCase(userRepo repositories.UserRepository) *CreateUserUseCa
 }
 
 func (c *CreateUserUseCase) Execute(in CreateUserDto) (*models.User, error) {
-	_, err := c.userRepo.FindByUsername(in.Username)
+	_, err := c.userRepo.FindByEmail(in.Email)
 	if err == nil {
 		return nil, errors.New("the user already exists")
 	}
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(in.Password), bcrypt.DefaultCost)
 	user := models.User{
-		Username: in.Username,
+		Email:    in.Email,
 		Password: string(passwordHash),
 	}
 	err = c.userRepo.Save(&user)
