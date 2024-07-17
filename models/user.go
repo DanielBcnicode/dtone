@@ -23,7 +23,7 @@ func (u User) CheckPassword(pass string) (bool, error) {
 }
 
 // GetBalanceFormatted By default we store the Balance as integer 60, wihout decimal,
-// multipliying the real balance by 100 (2 decimals)
+// multiplying the real balance by 100 (2 decimals)
 func (u User) GetBalanceFormatted() string {
 	b := float64(u.Balance / 100)
 	return fmt.Sprintf("%.2f", b)
