@@ -43,6 +43,8 @@ func main() {
 	}(connection)
 
 	mongoUserRepository := repositories.NewMongoUserRepository(db)
+	mongoProductRepository := repositories.NewMongoProductRepository(db)
+
 	createUser := use_cases.NewCreateUserUseCase(mongoUserRepository)
 	userController := controller.NewRegisterController(createUser)
 
@@ -59,6 +61,9 @@ func main() {
 	getOneUserUseCase := use_cases.NewGetOneUserUseCase(mongoUserRepository)
 	getOneUserController := controller.NewGetOneUserController(getOneUserUseCase)
 
+	createProductUseCase := use_cases.NewCreateProductUseCase(mongoProductRepository, mongoUserRepository)
+	createProductController := controller.NewCreateProductController(createProductUseCase, cnf.FolderRepository)
+
 	r := gin.Default()
 	control := r.Group("/")
 	control.GET("/health", func(context *gin.Context) {
@@ -66,14 +71,15 @@ func main() {
 	})
 	public := r.Group("/api/v1")
 	public.Use(otelgin.Middleware("DTOne"))
-	public.POST("/register", userController.Register)
+	public.POST("/register", userController.Handle)
 	public.POST("/login", loginController.Login)
 
 	protected := r.Group("/api/v1")
 	protected.Use(otelgin.Middleware("DTOne"))
 	protected.Use(services.JwtAuthMiddleware(cnf.ApiSecret))
-	protected.PUT("users/:user_id/topup", topUpController.TopUp)
-	protected.GET("users/:user_id", getOneUserController.GetOneUser)
+	protected.PUT("users/:user_id/topup", topUpController.Handle)
+	protected.GET("users/:user_id", getOneUserController.Handle)
+	protected.POST("products", createProductController.Handle)
 	protected.GET("/test", func(context *gin.Context) {
 		context.JSON(200, gin.H{"message": "castaña"})
 	})

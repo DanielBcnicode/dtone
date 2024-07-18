@@ -29,7 +29,7 @@ func NewTopUpUserController(
 	}
 }
 
-func (tController *TopUpUserController) TopUp(c *gin.Context) {
+func (tController *TopUpUserController) Handle(c *gin.Context) {
 	var input TopUpUserInputDto
 	if err := c.ShouldBind(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})

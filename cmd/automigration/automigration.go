@@ -25,7 +25,7 @@ func main() {
 		}
 	}(connection)
 
-	err = db.AutoMigrate(models.User{})
+	err = db.AutoMigrate(models.User{}, models.Product{})
 	if err != nil {
 		panic(err)
 	}

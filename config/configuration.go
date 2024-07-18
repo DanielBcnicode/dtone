@@ -1,8 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"github.com/joho/godotenv"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -12,10 +14,24 @@ type OTLConfig struct {
 	InsecureCollector string
 }
 type Configuration struct {
-	Database      *DBConnection
-	ApiSecret     string
-	TokenLifeSpan int
-	OTL           OTLConfig
+	Database         *DBConnection
+	ApiSecret        string
+	TokenLifeSpan    int
+	OTL              OTLConfig
+	FolderRepository string
+}
+
+func (c *Configuration) checkFolderRepository() error {
+	path := filepath.Join(".", c.FolderRepository)
+	fi, err := os.Stat(path)
+	if err != nil {
+		return err
+	}
+	if !fi.IsDir() {
+		return fmt.Errorf("%s is not a folder", path)
+	}
+
+	return nil
 }
 
 func GetConfiguration() (*Configuration, error) {
@@ -33,14 +49,20 @@ func GetConfiguration() (*Configuration, error) {
 
 	ls, err := strconv.Atoi(os.Getenv("TOKEN_LIFE_SPAN"))
 	cnf := &Configuration{
-		Database:      &db,
-		ApiSecret:     os.Getenv("API_SECRET"),
-		TokenLifeSpan: ls,
+		Database:         &db,
+		ApiSecret:        os.Getenv("API_SECRET"),
+		TokenLifeSpan:    ls,
+		FolderRepository: os.Getenv("FOLDER_REPOSITORY"),
 		OTL: OTLConfig{
 			ServiceName:       os.Getenv("SERVICE_NAME"),
 			CollectorUrl:      os.Getenv("COLLECTOR_URL"),
 			InsecureCollector: os.Getenv("INSECURE_COLLECTOR"),
 		},
+	}
+
+	err = cnf.checkFolderRepository()
+	if err != nil {
+		return nil, err
 	}
 
 	return cnf, nil

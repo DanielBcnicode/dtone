@@ -22,7 +22,7 @@ func NewGetOneUserController(
 		GetOneUserUseCase: GetOneUserUseCase,
 	}
 }
-func (gController *GetOneUserController) GetOneUser(c *gin.Context) {
+func (gController *GetOneUserController) Handle(c *gin.Context) {
 	userId := c.Param("user_id")
 
 	dtoIn := use_cases.GetOneUserDto{ID: userId}

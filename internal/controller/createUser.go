@@ -31,7 +31,7 @@ func NewRegisterController(
 		CreateUserUseCase: CreateUseCase,
 	}
 }
-func (rController *CreateUserController) Register(c *gin.Context) {
+func (rController *CreateUserController) Handle(c *gin.Context) {
 	var input CreateUserInputDto
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -52,7 +52,7 @@ func (rController *CreateUserController) Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"user": rController.modelToOutputDto(user)})
+	c.JSON(http.StatusCreated, gin.H{"user": rController.modelToOutputDto(user)})
 }
 
 func (rController *CreateUserController) modelToOutputDto(m *models.User) CreateUserOutputDto {
