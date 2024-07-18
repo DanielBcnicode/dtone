@@ -24,8 +24,8 @@ type LoginUseCase struct {
 	webTokenService services.IWebTokenService
 }
 
-func NewLoginUseCase(userRepo repositories.UserRepository, webTokenService services.IWebTokenService) (*LoginUseCase, error) {
-	return &LoginUseCase{userRepo: userRepo, webTokenService: webTokenService}, nil
+func NewLoginUseCase(userRepo repositories.UserRepository, webTokenService services.IWebTokenService) *LoginUseCase {
+	return &LoginUseCase{userRepo: userRepo, webTokenService: webTokenService}
 }
 
 func (l LoginUseCase) Execute(in LoginDto) (*LoginResponse, error) {

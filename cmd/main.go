@@ -50,11 +50,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	login, err := use_cases.NewLoginUseCase(mongoUserRepository, webTokenService)
-	if err != nil {
-		panic(err)
-	}
+	login := use_cases.NewLoginUseCase(mongoUserRepository, webTokenService)
 	loginController := controller.NewLoginController(login)
+
+	topUpUseCase := use_cases.NewTopUpUserUseCase(mongoUserRepository)
+	topUpController := controller.NewTopUpUserController(topUpUseCase)
 
 	r := gin.Default()
 	control := r.Group("/")
@@ -69,6 +69,7 @@ func main() {
 	protected := r.Group("/api/v1")
 	protected.Use(otelgin.Middleware("DTOne"))
 	protected.Use(services.JwtAuthMiddleware(cnf.ApiSecret))
+	protected.PUT("users/:user_id/topup", topUpController.TopUp)
 	protected.GET("/test", func(context *gin.Context) {
 		context.JSON(200, gin.H{"message": "castaña"})
 	})

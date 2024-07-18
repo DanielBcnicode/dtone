@@ -8,15 +8,13 @@ import (
 	"time"
 )
 
-func TestUserModel(t *testing.T) {
+func getTestUser() User {
 	userId := uuid.NewString()
 	now := time.Now()
 	password := "123456"
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		t.Error(err)
-	}
-	u := User{
+	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
+	return User{
 		Base: Base{
 			ID:        userId,
 			CreatedAt: now,
@@ -29,7 +27,27 @@ func TestUserModel(t *testing.T) {
 		Telephone: "+34666555444",
 		Balance:   10000,
 	}
+}
+func TestUserModel(t *testing.T) {
+	u := getTestUser()
 	assert.Equal(t, "100.00", u.GetBalanceFormatted(), "format incorrect")
-	passwordEqual, err := u.CheckPassword(password)
+	passwordEqual, err := u.CheckPassword("123456")
+	if err != nil {
+		t.Error(err)
+	}
 	assert.True(t, passwordEqual, "Password should be equal")
+}
+
+func TestUserModelTopUp(t *testing.T) {
+	u := getTestUser()
+	err := u.TopUpFromString("10.01")
+	if err != nil {
+		t.Error(err)
+	}
+	assert.Equal(t, u.Balance, int64(11001))
+	err = u.TopUpFromString("-10.01")
+	if err != nil {
+		t.Error(err)
+	}
+	assert.Equal(t, u.Balance, int64(10000))
 }
