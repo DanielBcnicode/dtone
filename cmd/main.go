@@ -56,6 +56,9 @@ func main() {
 	topUpUseCase := use_cases.NewTopUpUserUseCase(mongoUserRepository)
 	topUpController := controller.NewTopUpUserController(topUpUseCase)
 
+	getOneUserUseCase := use_cases.NewGetOneUserUseCase(mongoUserRepository)
+	getOneUserController := controller.NewGetOneUserController(getOneUserUseCase)
+
 	r := gin.Default()
 	control := r.Group("/")
 	control.GET("/health", func(context *gin.Context) {
@@ -70,6 +73,7 @@ func main() {
 	protected.Use(otelgin.Middleware("DTOne"))
 	protected.Use(services.JwtAuthMiddleware(cnf.ApiSecret))
 	protected.PUT("users/:user_id/topup", topUpController.TopUp)
+	protected.GET("users/:user_id", getOneUserController.GetOneUser)
 	protected.GET("/test", func(context *gin.Context) {
 		context.JSON(200, gin.H{"message": "castaña"})
 	})
