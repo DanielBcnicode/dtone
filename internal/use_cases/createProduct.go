@@ -12,6 +12,7 @@ type CreateProductDto struct {
 	Description string
 	File        string
 	Version     string
+	Price       int64
 }
 
 type ICreateProductUseCase interface {
@@ -44,6 +45,7 @@ func (c *CreateProductUseCase) Execute(in CreateProductDto) (*models.Product, er
 		Description: in.Description,
 		File:        in.File,
 		Version:     in.Version,
+		Price:       in.Price,
 	}
 	err = c.productRepo.Save(&product)
 	if err != nil {

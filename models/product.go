@@ -7,4 +7,5 @@ type Product struct {
 	Description string `gorm:"size:1024;nor null" json:"description"`
 	File        string `gorm:"size:255;not null" json:"file"`
 	Version     string `gorm:"size:10;not null;" json:"version"`
+	Price       int64  `gorm:"default:0" json:"price"`
 }

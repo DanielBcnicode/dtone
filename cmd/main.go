@@ -44,6 +44,7 @@ func main() {
 
 	mongoUserRepository := repositories.NewMongoUserRepository(db)
 	mongoProductRepository := repositories.NewMongoProductRepository(db)
+	mongoTransactionRepository := repositories.NewMongoTransactionRepository(db)
 
 	createUser := use_cases.NewCreateUserUseCase(mongoUserRepository)
 	userController := controller.NewRegisterController(createUser)
@@ -73,6 +74,9 @@ func main() {
 	getAllProductsUseCase := use_cases.NewGetAllProductsUseCase(mongoProductRepository)
 	getAllProductsController := controller.NewGetAllProductsController(getAllProductsUseCase)
 
+	buyProductUseCase := use_cases.NewBuyProductUseCase(mongoProductRepository, mongoUserRepository, mongoTransactionRepository)
+	buyProductController := controller.NewBuyProductController(buyProductUseCase)
+
 	r := gin.Default()
 	control := r.Group("/")
 	control.GET("/health", func(context *gin.Context) {
@@ -90,6 +94,8 @@ func main() {
 	protected.GET("users/:user_id", getOneUserController.Handle)
 	protected.POST("products", createProductController.Handle)
 	protected.POST("products/:product_id/file", uploadProductController.Handle)
+	protected.POST("products/:product_id/buy", buyProductController.HandleBuy)
+	protected.POST("products/:product_id/gift", buyProductController.HandleGift)
 	protected.GET("products", getAllProductsController.Handle)
 	protected.GET("products/:product_id", getOneProductController.Handle)
 	protected.GET("/test", func(context *gin.Context) {

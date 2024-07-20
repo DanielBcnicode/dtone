@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"dtonetest/internal/services"
 	"dtonetest/internal/use_cases"
 	"dtonetest/models"
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,7 @@ type CreateProductInputDto struct {
 	Description string `json:"description" binding:"required"`
 	File        string `json:"-"`
 	Version     string `json:"version" binding:"required"`
+	Price       string `json:"price" binding:"required"`
 }
 
 type ProductOutputDto struct {
@@ -22,6 +24,7 @@ type ProductOutputDto struct {
 	Description string `json:"description"`
 	File        string `json:"file"`
 	Version     string `json:"version"`
+	Price       string `json:"price"`
 }
 
 type CreateProductController struct {
@@ -46,12 +49,17 @@ func (cController *CreateProductController) Handle(c *gin.Context) {
 		return
 	}
 
+	price, err := services.CoinStringToInt64(input.Price)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "wrong price format"})
+	}
 	dtoIn := use_cases.CreateProductDto{
 		UserID:      input.UserID,
 		Name:        input.Name,
 		Description: input.Description,
 		File:        "",
 		Version:     input.Version,
+		Price:       price,
 	}
 	product, err := cController.CreateProductUseCase.Execute(dtoIn)
 	if err != nil {
@@ -70,5 +78,6 @@ func (cController *CreateProductController) modelToOutputDto(m *models.Product) 
 		Description: m.Description,
 		File:        m.File,
 		Version:     m.Version,
+		Price:       services.CoinInt64ToString(m.Price),
 	}
 }

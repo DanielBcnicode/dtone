@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"dtonetest/internal/services"
 	"dtonetest/internal/use_cases"
 	"dtonetest/models"
 	"github.com/gin-gonic/gin"
@@ -39,5 +40,6 @@ func (gController *GetOneProductController) modelToOutputDto(m *models.Product) 
 		Description: m.Description,
 		File:        m.File,
 		Version:     m.Version,
+		Price:       services.CoinInt64ToString(m.Price),
 	}
 }
