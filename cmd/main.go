@@ -67,6 +67,9 @@ func main() {
 	uploadProductUseCase := use_cases.NewUploadProductUseCase(mongoProductRepository, mongoUserRepository, cnf.FolderRepository)
 	uploadProductController := controller.NewUploadProductController(uploadProductUseCase, cnf.FolderRepository)
 
+	getOneProductUseCase := use_cases.NewGetOneProductUseCase(mongoProductRepository)
+	getOneProductController := controller.NewGetOneProductController(getOneProductUseCase)
+
 	r := gin.Default()
 	control := r.Group("/")
 	control.GET("/health", func(context *gin.Context) {
@@ -84,6 +87,7 @@ func main() {
 	protected.GET("users/:user_id", getOneUserController.Handle)
 	protected.POST("products", createProductController.Handle)
 	protected.POST("products/:product_id/file", uploadProductController.Handle)
+	protected.GET("products/:product_id", getOneProductController.Handle)
 	protected.GET("/test", func(context *gin.Context) {
 		context.JSON(200, gin.H{"message": "castaña"})
 	})
