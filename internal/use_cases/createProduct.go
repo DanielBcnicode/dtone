@@ -7,7 +7,6 @@ import (
 )
 
 type CreateProductDto struct {
-	ID          string
 	UserID      string
 	Name        string
 	Description string
@@ -40,14 +39,11 @@ func (c *CreateProductUseCase) Execute(in CreateProductDto) (*models.Product, er
 		return nil, errors.New("user not found")
 	}
 	product := models.Product{
-		Base: models.Base{
-			ID: in.ID,
-		},
 		UserID:      in.UserID,
 		Name:        in.Name,
 		Description: in.Description,
 		File:        in.File,
-		Version:     in.File,
+		Version:     in.Version,
 	}
 	err = c.productRepo.Save(&product)
 	if err != nil {

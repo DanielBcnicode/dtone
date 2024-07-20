@@ -25,9 +25,13 @@ func (c *Configuration) checkFolderRepository() error {
 	path := filepath.Join(".", c.FolderRepository)
 	fi, err := os.Stat(path)
 	if err != nil {
-		return err
+		err = os.MkdirAll(path, os.ModePerm)
+		if err != nil {
+			return fmt.Errorf("it can not create folder %s", path)
+		}
+		fi, err = os.Stat(path)
 	}
-	if !fi.IsDir() {
+	if err != nil || !fi.IsDir() {
 		return fmt.Errorf("%s is not a folder", path)
 	}
 
