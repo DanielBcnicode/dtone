@@ -17,5 +17,8 @@ services:
       - 8080:8080
     environment:
       - DB_HOST=postgres
+      - COLLECTOR_URL=host.docker.internal:4317
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - postgres
