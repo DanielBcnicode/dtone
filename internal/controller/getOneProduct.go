@@ -18,6 +18,19 @@ func NewGetOneProductController(
 		GetOneProductUseCase: GetOneProductUseCase,
 	}
 }
+
+// GetOneProducts godoc
+// @Sumary        Get one products
+// @Description   Get one specific products
+// @Tags          product
+// @Accept        json
+// @Produce       json
+// @Param         product_id	path	string	true	"Product ID"
+// @Success 200 {object} controller.ProductOutputDto
+// @Failure       400
+// @Failure       500
+// @Security JWT
+// @Router /api/v1/products/{product_id} [get]
 func (gController *GetOneProductController) Handle(c *gin.Context) {
 	productId := c.Param("product_id")
 

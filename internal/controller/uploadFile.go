@@ -25,6 +25,19 @@ func NewUploadProductController(
 	}
 }
 
+// UploadProductFile godoc
+// @Sumary        Upload Product File
+// @Description   Upload one file to be linked to a product
+// @Tags          product
+// @Accept        mpfd
+// @Produce       json
+// @Param         product_id	path	string	true	"Product ID"
+// @Param			coinData	formData	file	true	"File"
+// @Success 201 {object} controller.ProductOutputDto
+// @Failure       400
+// @Failure       500
+// @Security      JWT
+// @Router /api/v1/products/{product_id}/file [post]
 func (uController *UploadProductController) Handle(c *gin.Context) {
 	file, err := c.FormFile("file")
 	if err != nil {

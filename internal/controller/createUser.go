@@ -43,7 +43,7 @@ func NewRegisterController(
 // @Failure       400
 // @Failure       500
 // @Security      none
-// @Router /register [post]
+// @Router /api/v1/register [post]
 func (rController *CreateUserController) Handle(c *gin.Context) {
 	var input CreateUserInputDto
 	if err := c.ShouldBindJSON(&input); err != nil {

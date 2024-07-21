@@ -42,6 +42,18 @@ func NewCreateProductController(
 	}
 }
 
+// CreateProduct godoc
+// @Sumary        Create Product
+// @Description   Create a product without file (to upload file use UploadProduct
+// @Tags          product
+// @Accept        json
+// @Produce       json
+// @Param		 Product	body		controller.CreateProductInputDto	true	"Create Product"
+// @Success 201 {object} controller.ProductOutputDto
+// @Failure       400
+// @Failure       500
+// @Security JWT
+// @Router /api/v1/products [post]
 func (cController *CreateProductController) Handle(c *gin.Context) {
 	var input CreateProductInputDto
 	if err := c.ShouldBindJSON(&input); err != nil {

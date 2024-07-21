@@ -19,6 +19,18 @@ func NewLoginController(useCase use_cases.ILoginUseCase) LoginController {
 	return LoginController{LoginUseCase: useCase}
 }
 
+// LoginUser godoc
+// @Sumary        Login
+// @Description   Login a User
+// @Tags          user
+// @Accept        json
+// @Produce       json
+// @Param			loginData	body		controller.LoginInputDto	true	"Login"
+// @Success 200 {object} use_cases.LoginResponse
+// @Failure       400
+// @Failure       500
+// @Security      none
+// @Router /api/v1/login [post]
 func (lc LoginController) Login(c *gin.Context) {
 	var input LoginInputDto
 	if err := c.ShouldBind(&input); err != nil {

@@ -12,7 +12,7 @@ type LoginDto struct {
 }
 
 type LoginResponse struct {
-	Jwt string
+	Jwt string `json:"jwt"`
 }
 
 type ILoginUseCase interface {

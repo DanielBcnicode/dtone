@@ -23,6 +23,25 @@ definitions:
       type:
         type: string
     type: object
+  controller.CreateProductInputDto:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: string
+      user_id:
+        type: string
+      version:
+        type: string
+    required:
+    - description
+    - name
+    - price
+    - user_id
+    - version
+    type: object
   controller.CreateUserInputDto:
     properties:
       email:
@@ -63,6 +82,84 @@ definitions:
       telephone:
         type: string
     type: object
+  controller.GetUserTransactionsOutputDto:
+    properties:
+      transactions:
+        items:
+          $ref: '#/definitions/controller.innerTransactionsDto'
+        type: array
+      userId:
+        type: string
+    type: object
+  controller.LoginInputDto:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  controller.ProductOutputDto:
+    properties:
+      description:
+        type: string
+      file:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      price:
+        type: string
+      user_id:
+        type: string
+      version:
+        type: string
+    type: object
+  controller.TopUpUserInputDto:
+    properties:
+      amount:
+        type: string
+    required:
+    - amount
+    type: object
+  controller.TopUpUserOutputDto:
+    properties:
+      balance:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      telephone:
+        type: string
+    type: object
+  controller.innerTransactionsDto:
+    properties:
+      from_id:
+        type: string
+      id:
+        type: string
+      price:
+        type: string
+      product_id:
+        type: string
+      to_id:
+        type: string
+      transaction_date:
+        type: string
+      type:
+        type: string
+    type: object
+  use_cases.LoginResponse:
+    properties:
+      jwt:
+        type: string
+    type: object
 info:
   contact:
     name: Daniel
@@ -70,6 +167,123 @@ info:
   title: DTOne Swagger API
   version: "1.0"
 paths:
+  /api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: Login a User
+      parameters:
+      - description: Login
+        in: body
+        name: loginData
+        required: true
+        schema:
+          $ref: '#/definitions/controller.LoginInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/use_cases.LoginResponse'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - none: []
+      tags:
+      - user
+  /api/v1/products:
+    get:
+      consumes:
+      - application/json
+      description: Get all products
+      parameters:
+      - description: User ID
+        in: query
+        name: user_id
+        required: true
+        type: string
+      - description: Page
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/controller.ProductOutputDto'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      tags:
+      - product
+    post:
+      consumes:
+      - application/json
+      description: Create a product without file (to upload file use UploadProduct
+      parameters:
+      - description: Create Product
+        in: body
+        name: Product
+        required: true
+        schema:
+          $ref: '#/definitions/controller.CreateProductInputDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controller.ProductOutputDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      tags:
+      - product
+  /api/v1/products/{product_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get one specific products
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.ProductOutputDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      tags:
+      - product
   /api/v1/products/{product_id}/buy:
     post:
       consumes:
@@ -94,6 +308,37 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/controller.BuyProductOutputDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      tags:
+      - product
+  /api/v1/products/{product_id}/filep:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Upload one file to be linked to a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      - description: File
+        in: formData
+        name: coinData
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controller.ProductOutputDto'
         "400":
           description: Bad Request
         "500":
@@ -134,46 +379,7 @@ paths:
       - JWT: []
       tags:
       - product
-  /api/v1/users/{user_id}:
-    get:
-      consumes:
-      - application/json
-      description: Get user data
-      parameters:
-      - description: User ID
-        in: path
-        name: user_id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/controller.GetOneUserOutputDto'
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      security:
-      - JWT: []
-      tags:
-      - user
-  /health:
-    get:
-      consumes:
-      - '*/*'
-      description: get the status of server.
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-      summary: Show the status of server.
-      tags:
-      - root
-  /register:
+  /api/v1/register:
     post:
       consumes:
       - application/json
@@ -200,6 +406,103 @@ paths:
       - none: []
       tags:
       - user
+  /api/v1/users/{user_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user data
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetOneUserOutputDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      tags:
+      - user
+  /api/v1/users/{user_id}/topup:
+    put:
+      consumes:
+      - application/json
+      description: Top up the user balance the coin format is a string with 2 decimal
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      - description: Add User
+        in: body
+        name: coinData
+        required: true
+        schema:
+          $ref: '#/definitions/controller.TopUpUserInputDto'
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            $ref: '#/definitions/controller.TopUpUserOutputDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      tags:
+      - user
+  /api/v1/users/{user_id}/transactions:
+    get:
+      consumes:
+      - application/json
+      description: Get all transactions linked with an user
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetUserTransactionsOutputDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      tags:
+      - user
+  /health:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Show the status of server.
+      tags:
+      - health
 securityDefinitions:
   JWT:
     in: header

@@ -19,6 +19,21 @@ func NewGetAllProductsController(
 		GetAllProductsUseCase: GetAllProductsUseCase,
 	}
 }
+
+// GetAllProducts godoc
+// @Sumary        Get all products
+// @Description   Get all products
+// @Tags          product
+// @Accept        json
+// @Produce       json
+// @Param         user_id	query	string	true	"User ID"
+// @Param         page	query	int	true	"Page"
+// @Param         limit	query	int	true	"Limit"
+// @Success 200 {array} controller.ProductOutputDto
+// @Failure       400
+// @Failure       500
+// @Security JWT
+// @Router /api/v1/products [get]
 func (gController *GetAllProductsController) Handle(c *gin.Context) {
 	userId := c.Query("user_id")
 	page, err := strconv.Atoi(c.Query("page"))

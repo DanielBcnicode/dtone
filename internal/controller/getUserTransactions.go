@@ -35,6 +35,18 @@ func NewGetUserTransactionsController(
 	}
 }
 
+// GetUserTransactions godoc
+// @Sumary        Get the user transactions
+// @Description   Get all transactions linked with an user
+// @Tags          user
+// @Accept        json
+// @Produce       json
+// @Param         user_id	path	string	true	"User ID"
+// @Success 200 {object} controller.GetUserTransactionsOutputDto
+// @Failure       400
+// @Failure       500
+// @Security JWT
+// @Router /api/v1/users/{user_id}/transactions [get]
 func (gController *GetUserTransactionsController) Handle(c *gin.Context) {
 	userId := c.Param("user_id")
 	if uuid.Validate(userId) != nil {

@@ -8,7 +8,7 @@ import (
 )
 
 type TopUpUserInputDto struct {
-	UserID string `json:"user_id"`
+	UserID string `json:"-"`
 	Amount string `json:"amount" binding:"required,gt=0"`
 }
 
@@ -29,6 +29,19 @@ func NewTopUpUserController(
 	}
 }
 
+// TopUpUserBalance godoc
+// @Sumary        Top Up User Balance
+// @Description   Top up the user balance the coin format is a string with 2 decimal
+// @Tags          user
+// @Accept        json
+// @Produce       json
+// @Param         user_id	path	string	true	"User ID"
+// @Param			coinData	body		controller.TopUpUserInputDto	true	"Add User"
+// @Success 202 {object} controller.TopUpUserOutputDto
+// @Failure       400
+// @Failure       500
+// @Security      JWT
+// @Router /api/v1/users/{user_id}/topup [put]
 func (tController *TopUpUserController) Handle(c *gin.Context) {
 	var input TopUpUserInputDto
 	if err := c.ShouldBind(&input); err != nil {
