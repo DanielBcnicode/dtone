@@ -31,6 +31,19 @@ func NewRegisterController(
 		CreateUserUseCase: CreateUseCase,
 	}
 }
+
+// RegisterUser godoc
+// @Sumary        Register User
+// @Description   Add a new User
+// @Tags          user
+// @Accept        json
+// @Produce       json
+// @Param			user	body		controller.CreateUserInputDto	true	"Add User"
+// @Success 201 {object} controller.CreateUserOutputDto
+// @Failure       400
+// @Failure       500
+// @Security      none
+// @Router /register [post]
 func (rController *CreateUserController) Handle(c *gin.Context) {
 	var input CreateUserInputDto
 	if err := c.ShouldBindJSON(&input); err != nil {

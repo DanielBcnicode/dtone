@@ -63,7 +63,7 @@ func (uController *UploadProductController) Handle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"product": uController.modelToOutputDto(product)})
+	c.JSON(http.StatusCreated, uController.modelToOutputDto(product))
 }
 
 func (uController *UploadProductController) modelToOutputDto(m *models.Product) ProductOutputDto {

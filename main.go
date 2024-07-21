@@ -4,15 +4,39 @@ import (
 	"context"
 	"database/sql"
 	"dtonetest/config"
+	_ "dtonetest/docs"
 	"dtonetest/internal/controller"
 	"dtonetest/internal/services"
 	"dtonetest/internal/use_cases"
 	"dtonetest/repositories"
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"go.opentelemetry.io/contrib/instrumentation/github.com/gin-gonic/gin/otelgin"
 	"log"
 )
 
+// @title DTOne Swagger API
+// @version 1.0
+// @description Api test.
+
+// @contact.name Daniel
+
+// @securityDefinitions.apiKey JWT
+// @in header
+// @name Authorization
+
+// @host localhost:8080
+// @BasePath /
+// @schemes http
+// HealthCheck godoc
+// @Summary Show the status of server.
+// @Description get the status of server.
+// @Tags root
+// @Accept */*
+// @Produce json
+// @Success 200
+// @Router /health [get]
 func main() {
 	// Load configuration
 	cnf, err := config.GetConfiguration()
@@ -89,6 +113,7 @@ func main() {
 	public.Use(otelgin.Middleware("DTOne"))
 	public.POST("/register", userController.Handle)
 	public.POST("/login", loginController.Login)
+	public.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	protected := r.Group("/api/v1")
 	protected.Use(otelgin.Middleware("DTOne"))
@@ -102,9 +127,6 @@ func main() {
 	protected.POST("products/:product_id/gift", buyProductController.HandleGift)
 	protected.GET("products", getAllProductsController.Handle)
 	protected.GET("products/:product_id", getOneProductController.Handle)
-	protected.GET("/test", func(context *gin.Context) {
-		context.JSON(200, gin.H{"message": "castaña"})
-	})
 
 	err = r.Run(":8080")
 	if err != nil {

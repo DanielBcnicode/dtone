@@ -29,7 +29,7 @@ func (gController *GetOneProductController) Handle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"product": gController.modelToOutputDto(user)})
+	c.JSON(http.StatusOK, gController.modelToOutputDto(user))
 }
 
 func (gController *GetOneProductController) modelToOutputDto(m *models.Product) ProductOutputDto {

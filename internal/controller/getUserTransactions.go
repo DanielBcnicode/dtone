@@ -50,7 +50,7 @@ func (gController *GetUserTransactionsController) Handle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"historic": gController.modelToOutputDto(transactions, userId)})
+	c.JSON(http.StatusOK, gController.modelToOutputDto(transactions, userId))
 }
 
 func (gController *GetUserTransactionsController) modelToOutputDto(m []models.Transaction, userId string) GetUserTransactionsOutputDto {

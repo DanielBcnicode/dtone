@@ -1,0 +1,208 @@
+definitions:
+  controller.BuyProductInputDto:
+    properties:
+      user_id:
+        type: string
+    required:
+    - user_id
+    type: object
+  controller.BuyProductOutputDto:
+    properties:
+      from_id:
+        type: string
+      id:
+        type: string
+      price:
+        type: string
+      product_id:
+        type: string
+      to_id:
+        type: string
+      transaction_date:
+        type: string
+      type:
+        type: string
+    type: object
+  controller.CreateUserInputDto:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      telephone:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - telephone
+    type: object
+  controller.CreateUserOutputDto:
+    properties:
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      telephone:
+        type: string
+    type: object
+  controller.GetOneUserOutputDto:
+    properties:
+      balance:
+        type: string
+      email:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      telephone:
+        type: string
+    type: object
+info:
+  contact:
+    name: Daniel
+  description: Api test.
+  title: DTOne Swagger API
+  version: "1.0"
+paths:
+  /api/v1/products/{product_id}/buy:
+    post:
+      consumes:
+      - application/json
+      description: Buy a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      - description: Buy Product
+        in: body
+        name: userId
+        required: true
+        schema:
+          $ref: '#/definitions/controller.BuyProductInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.BuyProductOutputDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      tags:
+      - product
+  /api/v1/products/{product_id}/gift:
+    post:
+      consumes:
+      - application/json
+      description: Gift a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: product_id
+        required: true
+        type: string
+      - description: Buy Product
+        in: body
+        name: userId
+        required: true
+        schema:
+          $ref: '#/definitions/controller.BuyProductInputDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.BuyProductOutputDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      tags:
+      - product
+  /api/v1/users/{user_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get user data
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controller.GetOneUserOutputDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - JWT: []
+      tags:
+      - user
+  /health:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      summary: Show the status of server.
+      tags:
+      - root
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Add a new User
+      parameters:
+      - description: Add User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/controller.CreateUserInputDto'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controller.CreateUserOutputDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      security:
+      - none: []
+      tags:
+      - user
+securityDefinitions:
+  JWT:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

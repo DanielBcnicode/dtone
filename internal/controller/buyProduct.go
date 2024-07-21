@@ -35,6 +35,19 @@ func NewBuyProductController(
 	}
 }
 
+// BuyProduct godoc
+// @Sumary        Buy Product
+// @Description   Buy a product
+// @Tags          product
+// @Accept        json
+// @Produce       json
+// @Param         product_id	path	string	true	"Product ID"
+// @Param			userId	body		controller.BuyProductInputDto	true	"Buy Product"
+// @Success 200 {object} controller.BuyProductOutputDto
+// @Failure       400
+// @Failure       500
+// @Security JWT
+// @Router /api/v1/products/{product_id}/buy [post]
 func (cController *BuyProductController) HandleBuy(c *gin.Context) {
 	var input BuyProductInputDto
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -53,9 +66,22 @@ func (cController *BuyProductController) HandleBuy(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"transaction": cController.modelToOutputDto(transaction)})
+	c.JSON(http.StatusCreated, cController.modelToOutputDto(transaction))
 }
 
+// GiftProduct godoc
+// @Sumary        Gift Product
+// @Description   Gift a product
+// @Tags          product
+// @Accept        json
+// @Produce       json
+// @Param         product_id	path	string	true	"Product ID"
+// @Param			userId	body		controller.BuyProductInputDto	true	"Buy Product"
+// @Success 200 {object} controller.BuyProductOutputDto
+// @Failure       400
+// @Failure       500
+// @Security JWT
+// @Router /api/v1/products/{product_id}/gift [post]
 func (cController *BuyProductController) HandleGift(c *gin.Context) {
 	var input BuyProductInputDto
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -74,7 +100,7 @@ func (cController *BuyProductController) HandleGift(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"transaction": cController.modelToOutputDto(transaction)})
+	c.JSON(http.StatusCreated, cController.modelToOutputDto(transaction))
 }
 
 func (cController *BuyProductController) modelToOutputDto(m *models.Transaction) BuyProductOutputDto {

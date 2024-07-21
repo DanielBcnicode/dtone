@@ -47,7 +47,7 @@ func (tController *TopUpUserController) Handle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusAccepted, gin.H{"user": tController.modelToOutputDto(user)})
+	c.JSON(http.StatusAccepted, tController.modelToOutputDto(user))
 }
 
 func (tController *TopUpUserController) modelToOutputDto(m *models.User) TopUpUserOutputDto {

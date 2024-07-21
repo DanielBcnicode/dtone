@@ -22,6 +22,19 @@ func NewGetOneUserController(
 		GetOneUserUseCase: GetOneUserUseCase,
 	}
 }
+
+// GetOneUser godoc
+// @Sumary        Get a user
+// @Description   Get user data
+// @Tags          user
+// @Accept        json
+// @Produce       json
+// @Param         user_id	path	string	true	"User ID"
+// @Success 200 {object} controller.GetOneUserOutputDto
+// @Failure       400
+// @Failure       500
+// @Security JWT
+// @Router /api/v1/users/{user_id} [get]
 func (gController *GetOneUserController) Handle(c *gin.Context) {
 	userId := c.Param("user_id")
 
@@ -33,7 +46,7 @@ func (gController *GetOneUserController) Handle(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"user": gController.modelToOutputDto(user)})
+	c.JSON(http.StatusOK, gController.modelToOutputDto(user))
 }
 
 func (gController *GetOneUserController) modelToOutputDto(m *models.User) GetOneUserOutputDto {
