@@ -1,9 +1,11 @@
 package use_cases
 
 import (
+	"dtonetest/internal/services"
 	"dtonetest/models"
 	"dtonetest/repositories"
 	"errors"
+	"time"
 )
 
 type TopUpUserDto struct {
@@ -16,11 +18,12 @@ type ITopUpUserUseCase interface {
 }
 
 type TopUpUserUseCase struct {
-	userRepo repositories.UserRepository
+	userRepo        repositories.UserRepository
+	transactionRepo repositories.TransactionRepository
 }
 
-func NewTopUpUserUseCase(userRepo repositories.UserRepository) *TopUpUserUseCase {
-	return &TopUpUserUseCase{userRepo: userRepo}
+func NewTopUpUserUseCase(userRepo repositories.UserRepository, transactionRepo repositories.TransactionRepository) *TopUpUserUseCase {
+	return &TopUpUserUseCase{userRepo: userRepo, transactionRepo: transactionRepo}
 }
 
 func (tu *TopUpUserUseCase) Execute(in TopUpUserDto) (*models.User, error) {
@@ -35,6 +38,21 @@ func (tu *TopUpUserUseCase) Execute(in TopUpUserDto) (*models.User, error) {
 	err = tu.userRepo.Save(&user)
 	if err != nil {
 		return nil, err
+	}
+
+	amount, _ := services.CoinStringToInt64(in.Tokens)
+	transaction := models.Transaction{
+		Type:            models.TransactionTypeTopUp,
+		FromID:          user.ID,
+		ToID:            "",
+		ProductID:       "",
+		Price:           amount,
+		TransactionDate: time.Time{},
+	}
+
+	err = tu.transactionRepo.Save(&transaction)
+	if err != nil {
+		return &user, errors.New("transaction not stored but top up is done")
 	}
 
 	return &user, nil

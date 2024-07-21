@@ -56,7 +56,7 @@ func main() {
 	login := use_cases.NewLoginUseCase(mongoUserRepository, webTokenService)
 	loginController := controller.NewLoginController(login)
 
-	topUpUseCase := use_cases.NewTopUpUserUseCase(mongoUserRepository)
+	topUpUseCase := use_cases.NewTopUpUserUseCase(mongoUserRepository, mongoTransactionRepository)
 	topUpController := controller.NewTopUpUserController(topUpUseCase)
 
 	getOneUserUseCase := use_cases.NewGetOneUserUseCase(mongoUserRepository)
@@ -77,6 +77,9 @@ func main() {
 	buyProductUseCase := use_cases.NewBuyProductUseCase(mongoProductRepository, mongoUserRepository, mongoTransactionRepository)
 	buyProductController := controller.NewBuyProductController(buyProductUseCase)
 
+	getUserTransactionsUseCase := use_cases.NewGetUserTransactionsUseCase(mongoTransactionRepository)
+	getUserTransactionsController := controller.NewGetUserTransactionsController(getUserTransactionsUseCase)
+
 	r := gin.Default()
 	control := r.Group("/")
 	control.GET("/health", func(context *gin.Context) {
@@ -92,6 +95,7 @@ func main() {
 	protected.Use(services.JwtAuthMiddleware(cnf.ApiSecret))
 	protected.PUT("users/:user_id/topup", topUpController.Handle)
 	protected.GET("users/:user_id", getOneUserController.Handle)
+	protected.GET("users/:user_id/transactions", getUserTransactionsController.Handle)
 	protected.POST("products", createProductController.Handle)
 	protected.POST("products/:product_id/file", uploadProductController.Handle)
 	protected.POST("products/:product_id/buy", buyProductController.HandleBuy)

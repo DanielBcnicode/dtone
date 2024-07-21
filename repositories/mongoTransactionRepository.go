@@ -49,6 +49,20 @@ func (tr *MongoTransactionRepository) FindAllByToID(toID string, fromDate *time.
 	return transactions, tx.Error
 }
 
+func (tr *MongoTransactionRepository) FindAllForAUser(userID string, fromDate *time.Time, toDate *time.Time) ([]models.Transaction, error) {
+	var transactions []models.Transaction
+	var tx *gorm.DB
+	if fromDate != nil && toDate != nil {
+		tx = tr.Database.
+			Find(&transactions, "to_id = ? OR from_id = ?", userID, userID).Where("transaction_date BETWEEN ? AND ?", fromDate, toDate)
+	} else {
+		tx = tr.Database.
+			Find(&transactions, "to_id = ? OR from_id = ?", userID, userID)
+	}
+
+	return transactions, tx.Error
+}
+
 func (tr *MongoTransactionRepository) FindOneTransaction(productId, fromID, toID string) (*models.Transaction, error) {
 	var transaction models.Transaction
 	tx := tr.Database.

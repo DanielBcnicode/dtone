@@ -13,8 +13,8 @@ type Transaction struct {
 	Base
 	Type            string    `gorm:"type:varchar(10);not null" json:"type"`
 	FromID          string    `gorm:"type:uuid;not null" json:"from_id"`
-	ToID            string    `gorm:"type:uuid;not null" json:"to_id"`
-	ProductID       string    `gorm:"type:uuid" json:"product_id"`
+	ToID            string    `gorm:"type:varchar(100)" json:"to_id"`
+	ProductID       string    `gorm:"type:varchar(100)" json:"product_id"`
 	Price           int64     `gorm:"default:0" json:"price"`
 	TransactionDate time.Time `json:"transaction_date"`
 }
