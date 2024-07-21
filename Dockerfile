@@ -1,9 +1,9 @@
-FROM golang:1.22.5-alpine as builder
+FROM golang:1.22.5-alpine AS builder
 
 ADD . /code
 WORKDIR /code
 RUN CGO_ENABLED=0 GOOS=linux go mod vendor
-RUN CGO_ENABLED=0 GOOS=linux go build -o dtonetest ./cmd/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o dtonetest ./main.go
 RUN CGO_ENABLED=0 GOOS=linux go build -o dtone_migrate ./cmd/automigration/automigration.go
 
 
