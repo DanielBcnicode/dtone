@@ -255,8 +255,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/products/{product_id}/filep": {
-            "put": {
+        "/api/v1/products/{product_id}/file": {
+            "post": {
                 "security": [
                     {
                         "JWT": []

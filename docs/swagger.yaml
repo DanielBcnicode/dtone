@@ -316,8 +316,8 @@ paths:
       - JWT: []
       tags:
       - product
-  /api/v1/products/{product_id}/filep:
-    put:
+  /api/v1/products/{product_id}/file:
+    post:
       consumes:
       - multipart/form-data
       description: Upload one file to be linked to a product
