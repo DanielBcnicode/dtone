@@ -1,5 +1,5 @@
 # DTOnetest
-## Presentation
+By Daniel Martinez
 ## Services
 
 This microservice expose an API in 8080 port with the next characteristics:
@@ -75,7 +75,7 @@ Response:
 
   - Use the jwt token in the next calls:
     - Get the jwt value and put it using the Authorize button
-    - You must put : bearer xxxxxxxxxxxxxxxxxxxxxxxxx in the text field and press Authorize
+    - You must put : `bearer xxxxxxxxxxxxxxxxxxxxxxxxx` in the text field and press Authorize
   - TopUp the balance of the user `/api/v1/users/{user_id}/topup`
     - user_id is in uuid4 format, and you can get it in the register response
     - amount is in text format with 2 decimals. Ex:  "1000.87"
@@ -85,4 +85,12 @@ Response:
   - Gift products to other users
   - Get user transactions
 ## Improvements 
-
+  - TEST, a lot of them :(
+  - Currently, all logged users can do all, I must implement a RBA check in all endpoints.
+  - Add a currency system, now only I use abstract ´coin´ in price and balance.
+  - Implement download endpoint and logic to count downloads.
+  - Implement OTLM logs to link the traces.
+  - Add admin reports.
+  - Add all the environment variables in docker-compose.yaml and delete the .env from the docker image.
+  - Refactor some parts.
+  - ...
